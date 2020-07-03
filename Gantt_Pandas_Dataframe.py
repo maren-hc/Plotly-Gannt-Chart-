@@ -39,7 +39,7 @@ fig.update_layout(
                 )
             ]),
             direction = "down",
-            pad = {"r":10, "t":10},
+            pad = dict({"r" : 10, "t" : 10}),
             showactive = True,
             x = 1,
             xanchor = "left",
