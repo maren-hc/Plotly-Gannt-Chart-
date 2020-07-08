@@ -21,55 +21,67 @@ fig = ff.create_gantt(df, colors = color, index_col = 'Resource',
 
 
 #Add legend title
-fig.update_layout(legend_title_text = "Status:<br>(A=Complete<br>B=In progress<br>C=Not Started")
+fig.update_layout(legend_title_text = 'Status:<br>(A=Complete<br>B=In progress<br>C=Not Started')
 
 #create buttons/ pull down menu
 button_layer_1_height = 1.08
 fig.update_layout(
-    updatemenus=[
+    updatemenus = [
         dict(
             active = 0,
             buttons = list([
-                dict(label = "Legend: On",
-                    args = ["showlegend", True],
-                    method = "restyle"
+                dict(label = 'Legend: On',
+                    args = ['showlegend', True],
+                    method = 'restyle'
                 ),
-                dict(label = "Legend: Off",
-                    args = ["showlegend", False],
-                    method = "restyle"
+                dict(label = 'Legend: Off',
+                    args = ['showlegend', False],
+                    method = 'restyle'
                 )
             ]),
-            direction = "down",
-            pad = dict({"r" : 10, "t" : 10}),
+            direction = 'down',
+            pad = dict({'r' : 10, 't' : 10}),
             showactive = True,
             x = 1,
-            xanchor = "left",
+            xanchor = 'left',
             y = 1.18,
-            yanchor = "top"
+            yanchor = 'top'
         ),
     ]
 )
-#add any annotations for button/dropdown 
-#fig.update_layout(
-    #annotations=[
-        #dict(text="Show<br>Legend?", x=1, xref="paper", y=0.95, yref="paper", align="left", showarrow= False)
-    #])
 
-#add hovertext
-#fig.update_annotations(hovertext= ['Job1', 'Job2', 'Job3', 'Job4', 'Job5'])
+#add hovertext externally
 
-# format hovertext
+#format hovertext
 fig.update_layout(
     hoverlabel = dict(
-                      bgcolor = "white", #background color
+                      bgcolor = 'white', #background color
                       font_size = 16,
-                      font_family = "Rockwell",
+                      font_family = 'Rockwell',
                       bordercolor = 'black', #font color
                       align = 'right'
     ),
     hovermode = 'closest'
     )
 
+#add today line 
+today = date.today()
+fig.update_layout(shapes = [
+    dict(
+        type = 'line',
+        yref = 'paper', y0 = 0, y1 = 1,
+        xref = 'x', x0 = today, x1 = today,
+        name = 'today'
+    )#,
+#add milestones using shape, somehow anchor to the data
+    #dict(
+    #    type = 'rect',
+    #    yref = 'paper', y0 = 0.20, y1 = 0.25,
+    #    xref = 'x', x0 = '2009-02-26', x1 = '2009-03-01',
+    #    fillcolor = 'black',
+    #    name = 'title'
+    #)
+])
 #determine locations for any permanent labels (can also use code to find middle date)
 LabelDateA = '2009-02-01'
 LabelDateB = '2009-03-20'
@@ -79,48 +91,21 @@ LabelDateE = '2009-04-01'
 
 
 #add permanent labels
-annots = [dict(x = LabelDateA, y = 0, align = "center", text = "Jean", showarrow = False, font = dict(color = 'white')),
-          dict(x = LabelDateB, y = 1, align = "center", text = "Henry", showarrow = False, font = dict(color = 'white')),
-          dict(x = LabelDateC, y = 2, align = "center", text = "Toby", showarrow = False, font = dict(color = 'white')),
-          dict(x = LabelDateD, y = 3, align = "center", text = "Maren", showarrow = False, font = dict(color = 'white')),
-          dict(x = LabelDateE, y = 4, align = "center", text = "Da", showarrow = False, font = dict(color = 'white'))]
+annots = [dict(x = LabelDateA, y = 0, align = 'center', text = 'Jean', showarrow = False, font = dict(color = 'white')),
+          dict(x = LabelDateB, y = 1, align = 'center', text = 'Henry', showarrow = False, font = dict(color = 'white')),
+          dict(x = LabelDateC, y = 2, align = 'center', text = 'Toby', showarrow = False, font = dict(color = 'white')),
+          dict(x = LabelDateD, y = 3, align = 'center', text = 'Maren', showarrow = False, font = dict(color = 'white')),
+          dict(x = LabelDateE, y = 4, align = 'center', text = 'Da', showarrow = False, font = dict(color = 'white')),
+#add label to today line
+          dict(showarrow = False, text = 'Today', align = 'center', x = today, xanchor = 'left', y = 5, yanchor = 'top', font = dict(color = 'black'))
+          ]
 
 fig.update_layout(annotations= annots)
-
-
-
-#add today line (need to research if we can tie this to a date/time somehow so it will move with time), for some reason this disappeared when i added config to fig.show()
-today = date.today()
-fig.update_layout(shapes = [
-    dict(
-        type = 'line',
-        yref = 'paper', y0 = 0, y1 = 1,
-        xref = 'x', x0 = today, x1 = today,
-        name = 'today'
-    )#,
-#add milestones using shape
-    #dict(
-    #    type = 'rect',
-    #    yref = 'paper', y0 = 0.20, y1 = 0.25,
-    #    xref = 'x', x0 = '2009-02-26', x1 = '2009-03-01',
-    #    fillcolor = 'black',
-    #    name = 'title'
-    #)
-])
-
-#add label to today line
-fig.update_layout(annotations = [
-    dict(
-        showarrow = False,
-        text = 'Today',
-        align = 'center',
-        x = today,
-        xanchor = 'left',
-        y = 5,
-        yanchor = 'top',
-        font = dict(color = 'black')
-    )
-])
-#add and remove modebar buttons and plotly logo by using fig.show(config = ), can also use any of the 
-#other config options
-fig.show()
+    
+#add and remove modebar buttons and plotly logo by using fig.show(config = ), can also use any of the other config options
+fig.show(config = dict({
+    'scrollZoom' : True,
+    'displaylogo' : False,
+    'displayModeBar' : True,
+    'modeBarButtonsToRemove' : ['toggleSpikelines', 'lasso2d', 'resetScale2d']}))
+    
