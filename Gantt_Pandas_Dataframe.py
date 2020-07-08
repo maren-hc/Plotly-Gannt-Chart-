@@ -2,7 +2,7 @@ import plotly.figure_factory as ff
 
 import pandas as pd
 
-
+from datetime import date
 #data
 df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gantt_example.csv')
 
@@ -87,24 +87,40 @@ annots = [dict(x = LabelDateA, y = 0, align = "center", text = "Jean", showarrow
 
 fig.update_layout(annotations= annots)
 
+
+
 #add today line (need to research if we can tie this to a date/time somehow so it will move with time), for some reason this disappeared when i added config to fig.show()
+today = date.today()
 fig.update_layout(shapes = [
     dict(
         type = 'line',
         yref = 'paper', y0 = 0, y1 = 1,
-        xref = 'x', x0 = '2009-04-01', x1 = '2009-04-01'
-    )
-])
-
+        xref = 'x', x0 = today, x1 = today,
+        name = 'today'
+    )#,
 #add milestones using shape
-fig.update_layout(shapes = [
-    dict(
-        type = 'rect',
-        yref = 'paper', y0 = 0.20, y1 = 0.25,
-        xref = 'x', x0 = '2009-02-26', x1 = '2009-03-01',
-        fillcolor = 'black'
-    )
+    #dict(
+    #    type = 'rect',
+    #    yref = 'paper', y0 = 0.20, y1 = 0.25,
+    #    xref = 'x', x0 = '2009-02-26', x1 = '2009-03-01',
+    #    fillcolor = 'black',
+    #    name = 'title'
+    #)
 ])
 
-#add and remove modebar buttons and plotly logo by using fig.show(config = )
+#add label to today line
+fig.update_layout(annotations = [
+    dict(
+        showarrow = False,
+        text = 'Today',
+        align = 'center',
+        x = today,
+        xanchor = 'left',
+        y = 5,
+        yanchor = 'top',
+        font = dict(color = 'black')
+    )
+])
+#add and remove modebar buttons and plotly logo by using fig.show(config = ), can also use any of the 
+#other config options
 fig.show()
