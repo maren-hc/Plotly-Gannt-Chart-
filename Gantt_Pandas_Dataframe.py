@@ -108,3 +108,4 @@ fig.show(config = dict({
     'displaylogo' : False,
     'displayModeBar' : True,
     'modeBarButtonsToRemove' : ['toggleSpikelines', 'lasso2d', 'resetScale2d']}))
+    
