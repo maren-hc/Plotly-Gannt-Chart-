@@ -2,7 +2,7 @@ import plotly.figure_factory as ff
 
 import pandas as pd
 
-
+from datetime import date
 #data
 df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gantt_example.csv')
 
@@ -14,7 +14,8 @@ color = dict (A = 'rgb(46, 137, 205)',
 #create chart with basic formatting
 fig = ff.create_gantt(df, colors = color, index_col = 'Resource', 
                       show_colorbar = True, bar_width = 0.4, showgrid_x = True, showgrid_y = True, 
-                      title = 'Example Chart With Data From Plotly'   
+                      title = 'Example Chart With Data From Plotly',
+                      show_hover_fill = True
                       )
 
 
@@ -48,12 +49,17 @@ fig.update_layout(
         ),
     ]
 )
-
-#add any annotations for button/dropdown and format hovertext
-fig.update_layout(
+#add any annotations for button/dropdown 
+#fig.update_layout(
     #annotations=[
         #dict(text="Show<br>Legend?", x=1, xref="paper", y=0.95, yref="paper", align="left", showarrow= False)
-    #],
+    #])
+
+#add hovertext
+#fig.update_annotations(hovertext= ['Job1', 'Job2', 'Job3', 'Job4', 'Job5'])
+
+# format hovertext
+fig.update_layout(
     hoverlabel = dict(
                       bgcolor = "white", #background color
                       font_size = 16,
@@ -61,7 +67,7 @@ fig.update_layout(
                       bordercolor = 'black', #font color
                       align = 'right'
     ),
-    #hovermode = 'y',
+    hovermode = 'closest'
     )
 
 #determine locations for any permanent labels (can also use code to find middle date)
@@ -79,23 +85,42 @@ annots = [dict(x = LabelDateA, y = 0, align = "center", text = "Jean", showarrow
           dict(x = LabelDateD, y = 3, align = "center", text = "Maren", showarrow = False, font = dict(color = 'white')),
           dict(x = LabelDateE, y = 4, align = "center", text = "Da", showarrow = False, font = dict(color = 'white'))]
 
-fig['layout']['annotations'] = annots
+fig.update_layout(annotations= annots)
 
-#add today line (need to research if we can tie this to a date/time somehow so it will move with time)
+
+
+#add today line (need to research if we can tie this to a date/time somehow so it will move with time), for some reason this disappeared when i added config to fig.show()
+today = date.today()
 fig.update_layout(shapes = [
     dict(
         type = 'line',
         yref = 'paper', y0 = 0, y1 = 1,
-        xref = 'x', x0 = '2009-04-01', x1 = '2009-04-01',
-        name = "today"
-        ),
-    dict(
-        type = 'rect',
-        yref = 'paper', y0 = 'Job A', y1 = 'JobA',
-        xref = 'x', x0 = '2009-01-01', x1 = '2009-01-01',
-    )
+        xref = 'x', x0 = today, x1 = today,
+        name = 'today'
+    )#,
+#add milestones using shape
+    #dict(
+    #    type = 'rect',
+    #    yref = 'paper', y0 = 0.20, y1 = 0.25,
+    #    xref = 'x', x0 = '2009-02-26', x1 = '2009-03-01',
+    #    fillcolor = 'black',
+    #    name = 'title'
+    #)
 ])
 
-#add milestones using shape
-
+#add label to today line
+fig.update_layout(annotations = [
+    dict(
+        showarrow = False,
+        text = 'Today',
+        align = 'center',
+        x = today,
+        xanchor = 'left',
+        y = 5,
+        yanchor = 'top',
+        font = dict(color = 'black')
+    )
+])
+#add and remove modebar buttons and plotly logo by using fig.show(config = ), can also use any of the 
+#other config options
 fig.show()
