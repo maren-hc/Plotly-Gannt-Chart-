@@ -3,6 +3,9 @@ import plotly.figure_factory as ff
 import pandas as pd
 
 from datetime import date
+
+
+
 #data
 df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gantt_example.csv')
 
@@ -50,8 +53,6 @@ fig.update_layout(
     ]
 )
 
-#add hovertext externally
-
 #format hovertext
 fig.update_layout(
     hoverlabel = dict(
@@ -72,15 +73,15 @@ fig.update_layout(shapes = [
         yref = 'paper', y0 = 0, y1 = 1,
         xref = 'x', x0 = today, x1 = today,
         name = 'today'
-    )#,
+    ),
 #add milestones using shape, somehow anchor to the data
-    #dict(
-    #    type = 'rect',
-    #    yref = 'paper', y0 = 0.20, y1 = 0.25,
-    #    xref = 'x', x0 = '2009-02-26', x1 = '2009-03-01',
-    #    fillcolor = 'black',
-    #    name = 'title'
-    #)
+    dict(
+        type = 'rect',
+        yref = 'paper', y0 = 0.20, y1 = 0.25,
+        xref = 'x', x0 = '2009-02-26', x1 = '2009-03-01',
+        fillcolor = 'black',
+        name = 'due date'
+    )
 ])
 #determine locations for any permanent labels (can also use code to find middle date)
 LabelDateA = '2009-02-01'
@@ -97,7 +98,8 @@ annots = [dict(x = LabelDateA, y = 0, align = 'center', text = 'Jean', showarrow
           dict(x = LabelDateD, y = 3, align = 'center', text = 'Maren', showarrow = False, font = dict(color = 'white')),
           dict(x = LabelDateE, y = 4, align = 'center', text = 'Da', showarrow = False, font = dict(color = 'white')),
 #add label to today line
-          dict(showarrow = False, text = 'Today', align = 'center', x = today, xanchor = 'left', y = 5, yanchor = 'top', font = dict(color = 'black'))
+          dict(showarrow = False, bordercolor = 'black', borderwidth = 2, bgcolor = 'white', opacity = 1, text = 'Today', align = 'left', x = today,
+               xanchor = 'center', y = 4, yanchor = 'top', font = dict(color = 'black'))
           ]
 
 fig.update_layout(annotations= annots)
@@ -108,4 +110,3 @@ fig.show(config = dict({
     'displaylogo' : False,
     'displayModeBar' : True,
     'modeBarButtonsToRemove' : ['toggleSpikelines', 'lasso2d', 'resetScale2d']}))
-    
